@@ -1,57 +1,65 @@
 import React from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
-import { terms } from '../data/terms';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import TermImage from '../components/TermImage';
+import fullTerms from '../data/fullTerms';
 
-const TermListScreen = ({ route, navigation }) => {
+const TermListScreen = () => {
+  const route = useRoute();
+  const navigation = useNavigation();
   const { letter } = route.params;
 
-  // Filter terms based on selected letter
-  const filteredTerms = terms.filter(term => term.letter === letter);
+  const terms = fullTerms[letter.toLowerCase()] || [];
 
   const renderItem = ({ item }) => (
     <TouchableOpacity
-      style={styles.item}
-      onPress={() => navigation.navigate('Detail', { term: item })}
+      style={styles.termItem}
+      onPress={() => navigation.navigate('TermDetailScreen', { term: item })}
     >
-      <Text style={styles.itemText}>{item.name}</Text>
+      <TermImage imageName={item.imageName} style={styles.image} />
+      <Text style={styles.termName}>{item.name}</Text>
     </TouchableOpacity>
   );
 
   return (
     <View style={styles.container}>
+      <Text style={styles.header}>Terms for "{letter}"</Text>
       <FlatList
-        data={filteredTerms}
-        keyExtractor={(item) => item.name}
+        data={terms}
         renderItem={renderItem}
-        ListEmptyComponent={<Text style={styles.empty}>No terms found for "{letter}"</Text>}
-        onPress={() => navigation.navigate('TermDetail', { term })}
-
+        keyExtractor={(item, index) => `${letter}-${index}`}
       />
     </View>
   );
 };
 
+export default TermListScreen;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    backgroundColor: '#fff',
   },
-  item: {
-    backgroundColor: '#f0f0f0',
-    padding: 20,
-    marginBottom: 10,
-    borderRadius: 10,
+  header: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 12,
   },
-  itemText: {
+  termItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 14,
+  },
+  image: {
+    width: 60,
+    height: 60,
+    marginRight: 12,
+    borderRadius: 8,
+    resizeMode: 'cover',
+  },
+  termName: {
     fontSize: 18,
     fontWeight: '500',
   },
-  empty: {
-    textAlign: 'center',
-    marginTop: 50,
-    fontSize: 16,
-    color: 'gray',
-  },
 });
-
-export default TermListScreen;

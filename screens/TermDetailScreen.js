@@ -2,59 +2,56 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import TermImage from '../components/TermImage';
 
-const TermDetail = ({ route }) => {
+const TermDetailScreen = ({ route }) => {
   const { term } = route.params;
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>{term.name}</Text>
+      <Text style={styles.name}>{term.name}</Text>
+      <TermImage imageName={term.imageName} style={styles.image} />
 
-      <TermImage imageName={term.imageName} />
-
-      <Text style={styles.heading}>Meaning:</Text>
+      <Text style={styles.sectionTitle}>Meaning</Text>
       <Text style={styles.text}>{term.meaning}</Text>
 
-      <Text style={styles.heading}>Application:</Text>
+      <Text style={styles.sectionTitle}>Application</Text>
       <Text style={styles.text}>{term.application}</Text>
 
-      <Text style={styles.heading}>Advantages:</Text>
-      {Array.isArray(term.advantages) &&
-        term.advantages.map((adv, index) => (
-          <Text key={index} style={styles.bullet}>• {adv}</Text>
-        ))}
+      <Text style={styles.sectionTitle}>Advantages</Text>
+      <Text style={styles.text}>{term.advantages}</Text>
 
-      <Text style={styles.heading}>Disadvantages:</Text>
-      {Array.isArray(term.disadvantages) &&
-        term.disadvantages.map((dis, index) => (
-          <Text key={index} style={styles.bullet}>• {dis}</Text>
-        ))}
+      <Text style={styles.sectionTitle}>Disadvantages</Text>
+      <Text style={styles.text}>{term.disadvantages}</Text>
     </ScrollView>
   );
 };
 
+export default TermDetailScreen;
+
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
+    padding: 20,
+    backgroundColor: '#fff',
   },
-  title: {
-    fontSize: 24,
+  name: {
+    fontSize: 26,
     fontWeight: 'bold',
     marginBottom: 12,
+    textAlign: 'center',
   },
-  heading: {
-    fontSize: 18,
+  image: {
+    width: '100%',
+    height: 250,
+    resizeMode: 'contain',
+    marginBottom: 20,
+  },
+  sectionTitle: {
+    fontSize: 20,
     fontWeight: '600',
-    marginTop: 10,
+    marginTop: 16,
+    marginBottom: 6,
   },
   text: {
     fontSize: 16,
-    marginVertical: 4,
-  },
-  bullet: {
-    fontSize: 16,
-    marginLeft: 12,
-    marginVertical: 2,
+    lineHeight: 24,
   },
 });
-
-export default TermDetail;
